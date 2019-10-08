@@ -1,9 +1,13 @@
-enum Reserved {INT=10,ID,SUM,SUB,MULT,DIV,LPAREN,RPAREN,START,END,ASSIGN,SEMI};
+enum Reserved {INT=10,ID,SUM,SUB,MULT,DIV,LPAREN,RPAREN,START,END,ASSIGN,SEMI,PRINT,STRING};
 typedef struct token{
 	int type;
 	int value;
 	char *id;
 }Token;
+/*typedef struct print{
+	Token *items;
+	int size;
+}Print;*/
 typedef struct Node{
 	Token item;
 	struct Node *left,*right;

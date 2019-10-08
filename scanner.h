@@ -6,7 +6,26 @@ typedef struct keywords{
 const keywords keys[]={
 	{"start",START},
 	{"end",END},
+	{"print",PRINT}
 };
+Token string(char *str){
+	//printf("HI string\n");
+	Token token;
+	token.type=STRING;
+	//printf("Token type: %d\n",token.type );
+	int size=0,start=pos+1;
+	while(str[++pos]!='"'){
+		//printf("%c\n",str[pos] );
+		size++;
+	}
+	if(size>0)
+		token.id=str+(start);
+	else
+		token.id=NULL;
+	token.value=size;
+	//printf("pos after string %d\n",size);
+	return token;
+}
 int integer(char *str){
 	int i=0;	
 	char *num;
@@ -15,7 +34,17 @@ int integer(char *str){
 	while(str[pos]!=EOF && isdigit(str[pos])){
 		num=(char*)realloc(num,(++i)*sizeof(char));
 		num[i]=str[pos++];
-		//printf("%d\n", i);
+	}
+	//num[++i]='\0';
+	//printf("HI %s\n", num);
+	if(str[pos]=='.'){
+		num=(char*)realloc(num,(++i)*sizeof(char));
+		num[i]=str[pos++];
+		while(str[pos]!=EOF && isdigit(str[pos])){
+			num=(char*)realloc(num,(++i)*sizeof(char));
+			num[i]=str[pos++];
+		}
+		printf("%s\n", num);
 	}
 	pos--;
 	num[++i]='\0';
@@ -36,7 +65,7 @@ Token get_id(char *str){
 	}
 	pos--;
 	id[++i]='\0';
-	for(i=0;i<2;i++){
+	for(i=0;i<3;i++){
 		//printf("Hi\n");
 		if(!strcmp(id,keys[i].key)){
 			token.id=id;
@@ -75,7 +104,7 @@ Token scanner(char *str,char ch){
 		token.id="=";
 		return token;
 	}
-	if(ch== '\n'||ch==EOF){
+	if(ch==EOF){
 		token.type=EOF;
 		token.value=EOF;
 		token.id=NULL;
@@ -128,6 +157,9 @@ Token scanner(char *str,char ch){
 		token.value='/';
 		token.id=NULL;
 		return token;
+	}
+	if(ch=='"'){
+		return string(str);
 	}
 	printf(RED"[Interpretation error]"RESET"Scan error!! '%c' cannot be recognised as token!\n",ch);
 	//exit(0);

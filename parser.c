@@ -37,7 +37,6 @@ void match(int current_token_type,int type){
 	exit(0);
 	//synerror();
 }
-
 Node* factor(char *str,Node *root,Token current_token){
 	Token op;
 	Node *temp;
@@ -135,8 +134,27 @@ Node* assign(char *str,Node *root,Token current_token){
 Node* statement(char *str,Node *root,Token current_token){
 	//printf("statement: at pos=%d %d\n",pos,current_token.type );
 	if(current_token.type==ID){
+		//printf("ID\n");
 		root=assign(str,root,current_token);
 		g_size++;
+	}
+	else if(current_token.type==PRINT){
+		//printf("Hi\n");
+		root=leaf(NULL,current_token);pos++;
+		Node *temp=root;
+		int rev_pos=pos;
+		//printf("print %d\n", pos);
+		current_token=scanner(str,str[pos]);
+		//printf("print %d %d %d\n", pos,current_token.type,current_token.value);
+		while(current_token.type!=SEMI){
+			pos++;
+			temp->right=leaf(NULL,current_token);
+			temp=temp->right;
+			//printf("value: %d\n",(temp->item).value);
+			current_token=scanner(str,str[pos]);
+		}
+		//printf("pos=%d\n", pos);
+		//match(current_token.type,SEMI);
 	}
 	else
 		pos++;
@@ -144,6 +162,7 @@ Node* statement(char *str,Node *root,Token current_token){
 }
 Compound* compound(char *str,Compound *root,Token current_token){
 	root=(Compound*)malloc(sizeof(Compound));
+	//printf("statement_list: 2nd pos=%d %d %s\n",pos,current_token.type,current_token.id );
 	root=set_comp(root,NULL,statement(str,NULL,current_token));
 	Compound *temp=root;
 	//pos--;
@@ -157,9 +176,9 @@ Compound* compound(char *str,Compound *root,Token current_token){
 		match(current_token.type,SEMI);
 		rev_pos=pos;
 		current_token=scanner(str,str[pos]);pos++;
-		if (current_token.type!=ID)
+		if (current_token.type!=ID && current_token.type!=PRINT)
 			break;
-		//printf("1 Hi statement_list: %d\n",pos);
+		//printf("1 Hi statement_list: %d %d\n",pos,current_token.type);
 		/*while(temp->child!=NULL)
 			temp=temp->child;*/
 		temp->child=set_comp((Compound*)malloc(sizeof(Compound)),NULL,statement(str,NULL,current_token));//pos--;
@@ -168,6 +187,7 @@ Compound* compound(char *str,Compound *root,Token current_token){
 		//printf("rev_pos=%d\n",rev_pos);
 		current_token=scanner(str,str[pos]);
 	}
+	//printf("rev_pos %d\n", rev_pos);
 	pos=rev_pos;
 	//match(current_token.type,SEMI);
 	return root;
@@ -198,7 +218,7 @@ void printInorder(Node* node)
      //if((node->item).type==INT)
      	//printf("%d %s\n", (node->item).value,(node->item).id);
      //else   
-  		//printf("%c ", (node->item).value);
+  		printf("%d ", (node->item).type);
      /* now recur on right child */
      printInorder(node->right); 
 } 

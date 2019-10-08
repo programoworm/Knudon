@@ -33,7 +33,7 @@ int value_expr(Node *root){
 	} 
 	return (root->item).value;
 }
-void visit_assign(Node *root){
+void visit_comp(Node *root){
 	//printf("Hi I am running\n");
 	if((root->item).type==ASSIGN){
 		//printf("Hi welcome to assign\n");
@@ -58,9 +58,48 @@ void visit_assign(Node *root){
 		size_sym++;
 	}
 }
-void interprete(Compound *root){
+void visit_print(Node *root){
+	//printf("Hi\n");
+			//printf("Hi interpreter\n");
 	while(root!=NULL){
-		visit_assign(root->item);
+		Token token=root->item;
+		if(token.type==STRING){
+			int size=token.value;
+			char *out=token.id;
+		//printf("%d\n",token.value);
+			if(out==NULL){
+			//printf("NULL pointer\n",size);
+				return;
+			}
+			for(int i=0; i<size; i++)
+				printf("%c",out[i]);
+			root=root->right;
+		}
+		if(token.type==ID){
+			//int i=0;
+			//printf("Hi\n");
+			for(int i=0; i<size_sym; i++){
+				if(!strcmp(sym_table[i].id,token.id)){
+					//printf("Hi\n");
+					printf("%d",sym_table[i].value);
+					break;
+				}
+			}
+			root=root->right;
+			//printf("%s not found!\n",token.id );
+		}
+	}
+	printf("\n");
+}
+void interprete(Compound *root){
+	//printf("Hi\n");
+	while(root!=NULL){
+		if(((root->item)->item).type==PRINT){
+			//printf("Hi\n");
+			visit_print((root->item)->right);
+		}
+		//printf("Hi\n");
+		visit_comp(root->item);
 		root=root->child;
 	}
 
