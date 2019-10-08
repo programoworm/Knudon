@@ -23,7 +23,7 @@ int main(){
 	fread(buffer,1,len-1,fp);
 		//	printf("Error\n");
 		//buffer[strlen(buffer)]=EOF;
-		//puts(buffer);
+	//	puts(buffer);
 	Compound *root=parser(buffer);
 		//printf("HI %d\n", string[pos]);//(root->item).value);
 		//Compound *temp=root;

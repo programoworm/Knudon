@@ -144,17 +144,38 @@ Node* statement(char *str,Node *root,Token current_token){
 		Node *temp=root;
 		int rev_pos=pos;
 		//printf("print %d\n", pos);
-		current_token=scanner(str,str[pos]);pos++;
-		temp->right=leaf(NULL,current_token);
-		temp=temp->right;
+		current_token=scanner(str,str[pos]);//pos++;
+		if(current_token.type==ID||current_token.type==INT){
+			temp->right=(Node*)malloc(sizeof(Node));
+			temp=temp->right;
+			(temp->item).type=EXPR;
+			temp->left=expr(str,NULL,current_token);
+			temp->right=NULL;
+			//printInorder(temp->left);
+		}
+		else{
+			pos++;
+			temp->right=leaf(NULL,current_token);
+			temp=temp->right;
+		}
 		current_token=scanner(str,str[pos]);
 		//printf("print %d %d %d\n", pos,current_token.type,current_token.value);
 		while(current_token.type!=SEMI){
 			match(current_token.type,COMMA);
 			//printf("value: %d\n",(temp->item).type);
-			current_token=scanner(str,str[pos]);pos++;
-			temp->right=leaf(NULL,current_token);
-			temp=temp->right;
+			current_token=scanner(str,str[pos]);//pos++;
+			if(current_token.type==ID||current_token.type==INT){
+				temp->right=(Node*)malloc(sizeof(Node));
+				temp=temp->right;
+				(temp->item).type=EXPR;
+				temp->left=expr(str,NULL,current_token);
+				temp->right=NULL;
+				//printInorder(temp->left);
+			}
+			else{
+				temp->right=leaf(NULL,current_token);pos++;
+				temp=temp->right;
+			}
 			current_token=scanner(str,str[pos]);
 		}
 		//printf("pos=%d\n", pos);

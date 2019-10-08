@@ -63,6 +63,11 @@ void visit_print(Node *root){
 			//printf("Hi interpreter\n");
 	while(root!=NULL){
 		Token token=root->item;
+		if(token.type==EXPR){
+			//printf("HI\n");
+			printf("%d",value_expr(root->left));
+			root=root->right;
+		}
 		if(token.type==STRING){
 			int size=token.value;
 			char *out=token.id;

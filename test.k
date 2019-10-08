@@ -1,5 +1,5 @@
 start
-x=10*88;
-val=x+1;
-print "The value is ",val," ",x," This is required to execute";
+x=2*3;
+val=x+6;
+print "x=",x," val=",val," ";
 end
