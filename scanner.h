@@ -158,6 +158,12 @@ Token scanner(char *str,char ch){
 		token.id=NULL;
 		return token;
 	}
+	if(ch==','){
+		token.type=COMMA;
+		token.value=0;
+		token.id=NULL;
+		return token;
+	}
 	if(ch=='"'){
 		return string(str);
 	}

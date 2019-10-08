@@ -144,13 +144,17 @@ Node* statement(char *str,Node *root,Token current_token){
 		Node *temp=root;
 		int rev_pos=pos;
 		//printf("print %d\n", pos);
+		current_token=scanner(str,str[pos]);pos++;
+		temp->right=leaf(NULL,current_token);
+		temp=temp->right;
 		current_token=scanner(str,str[pos]);
 		//printf("print %d %d %d\n", pos,current_token.type,current_token.value);
 		while(current_token.type!=SEMI){
-			pos++;
+			match(current_token.type,COMMA);
+			//printf("value: %d\n",(temp->item).type);
+			current_token=scanner(str,str[pos]);pos++;
 			temp->right=leaf(NULL,current_token);
 			temp=temp->right;
-			//printf("value: %d\n",(temp->item).value);
 			current_token=scanner(str,str[pos]);
 		}
 		//printf("pos=%d\n", pos);
