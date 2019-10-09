@@ -168,6 +168,6 @@ Token scanner(char *str,char ch){
 		return string(str);
 	}
 	printf(RED"[Interpretation error]"RESET"Scan error!! '%c' cannot be recognised as token!\n",ch);
-	//exit(0);
+	exit(0);
 	//synerror();
 }
