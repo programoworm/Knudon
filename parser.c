@@ -26,6 +26,7 @@ Node* leaf(Node* root,Token item){
 	//printf("Hi leaf\n");
 	root->item=item;
 	root->left=root->right=NULL;
+	return root;
 }
 void match(int current_token_type,int type){
 	if(current_token_type==type){
@@ -81,7 +82,7 @@ Node* term(char *str,Node *root,Token current_token){
 	root=factor(str,root,current_token);
 	int rev_pos=pos;
 	current_token=scanner(str,str[pos]);
-	while(str[pos]!=EOF && str[pos]!='\n' && (current_token.type==MULT || current_token.type==DIV)){
+	while(str[pos]!='\0' && str[pos]!='\n' && (current_token.type==MULT || current_token.type==DIV)){
 		op=current_token;pos++;
 		Node *temp=(Node*)malloc(sizeof(Node));
 		current_token=scanner(str,str[pos]);
@@ -101,7 +102,7 @@ Node* expr(char *str,Node *root,Token current_token){
 	current_token=scanner(str,str[pos]);
 	//printf("%c\n",str[pos]);
 	//printf("%d\n",current_token.type);
-	while(str[pos]!=EOF && str[pos]!='\n' && (current_token.type==SUM || current_token.type==SUB)){
+	while(str[pos]!='\0' && str[pos]!='\n' && (current_token.type==SUM || current_token.type==SUB)){
 		op=current_token;pos++;
 		//printf("HI while expr\n");
 		Node *temp=(Node*)malloc(sizeof(Node));

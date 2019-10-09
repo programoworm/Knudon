@@ -31,7 +31,7 @@ int integer(char *str){
 	char *num;
 	num=(char*)malloc(sizeof(char));
 	num[i]=str[pos++];
-	while(str[pos]!=EOF && isdigit(str[pos])){
+	while(str[pos]!='\0' && isdigit(str[pos])){
 		num=(char*)realloc(num,(++i)*sizeof(char));
 		num[i]=str[pos++];
 	}
@@ -40,7 +40,7 @@ int integer(char *str){
 	if(str[pos]=='.'){
 		num=(char*)realloc(num,(++i)*sizeof(char));
 		num[i]=str[pos++];
-		while(str[pos]!=EOF && isdigit(str[pos])){
+		while(str[pos]!='\0' && isdigit(str[pos])){
 			num=(char*)realloc(num,(++i)*sizeof(char));
 			num[i]=str[pos++];
 		}
@@ -58,7 +58,7 @@ Token get_id(char *str){
 	Token token;
 	id=(char*)malloc(sizeof(char));
 	id[i]=str[pos++];
-	while(str[pos]!=EOF && isalnum(str[pos])){
+	while(str[pos]!='\0' && isalnum(str[pos])){
 		id=(char*)realloc(id,(++i)*sizeof(char));
 		id[i]=str[pos++];
 		//printf("%d\n", i);
@@ -104,7 +104,7 @@ Token scanner(char *str,char ch){
 		token.id="=";
 		return token;
 	}
-	if(ch==EOF){
+	if(ch=='\0'){
 		token.type=EOF;
 		token.value=EOF;
 		token.id=NULL;
