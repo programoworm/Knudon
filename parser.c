@@ -133,26 +133,21 @@ Node* assign(char *str,Node *root,Token current_token){
 	return temp;
 }
 Node* statement(char *str,Node *root,Token current_token){
-	//printf("statement: at pos=%d %d\n",pos,current_token.type );
 	if(current_token.type==ID){
-		//printf("ID\n");
 		root=assign(str,root,current_token);
 		g_size++;
 	}
 	else if(current_token.type==PRINT){
-		//printf("Hi\n");
 		root=leaf(NULL,current_token);pos++;
 		Node *temp=root;
 		int rev_pos=pos;
-		//printf("print %d\n", pos);
-		current_token=scanner(str,str[pos]);//pos++;
+		current_token=scanner(str,str[pos]);
 		if(current_token.type==ID||current_token.type==INT){
 			temp->right=(Node*)malloc(sizeof(Node));
 			temp=temp->right;
 			(temp->item).type=EXPR;
 			temp->left=expr(str,NULL,current_token);
 			temp->right=NULL;
-			//printInorder(temp->left);
 		}
 		else{
 			pos++;
@@ -160,18 +155,15 @@ Node* statement(char *str,Node *root,Token current_token){
 			temp=temp->right;
 		}
 		current_token=scanner(str,str[pos]);
-		//printf("print %d %d %d\n", pos,current_token.type,current_token.value);
 		while(current_token.type!=SEMI){
 			match(current_token.type,COMMA);
-			//printf("value: %d\n",(temp->item).type);
-			current_token=scanner(str,str[pos]);//pos++;
-			if(current_token.type==ID||current_token.type==INT){
+			current_token=scanner(str,str[pos]);
+			if(current_token.type==ID||current_token.type==INT||current_token.type==LPAREN){
 				temp->right=(Node*)malloc(sizeof(Node));
 				temp=temp->right;
 				(temp->item).type=EXPR;
 				temp->left=expr(str,NULL,current_token);
 				temp->right=NULL;
-				//printInorder(temp->left);
 			}
 			else{
 				temp->right=leaf(NULL,current_token);pos++;
@@ -179,8 +171,6 @@ Node* statement(char *str,Node *root,Token current_token){
 			}
 			current_token=scanner(str,str[pos]);
 		}
-		//printf("pos=%d\n", pos);
-		//match(current_token.type,SEMI);
 	}
 	else
 		pos++;
@@ -188,46 +178,29 @@ Node* statement(char *str,Node *root,Token current_token){
 }
 Compound* compound(char *str,Compound *root,Token current_token){
 	root=(Compound*)malloc(sizeof(Compound));
-	//printf("statement_list: 2nd pos=%d %d %s\n",pos,current_token.type,current_token.id );
 	root=set_comp(root,NULL,statement(str,NULL,current_token));
 	Compound *temp=root;
-	//pos--;
-	//printf("statement_list: at pos=%d %d\n",pos,current_token.type );
 	int rev_pos=pos;
-	//printf("Hi statement_list: %d\n",pos);
-	current_token=scanner(str,str[pos]);//pos++;
-	//printf("statement_list: 2nd pos=%d %d\n",pos,current_token.type );
+	current_token=scanner(str,str[pos]);
 	while(current_token.type==SEMI){
-		//printf("Hi program\n");
 		match(current_token.type,SEMI);
 		rev_pos=pos;
 		current_token=scanner(str,str[pos]);pos++;
 		if (current_token.type!=ID && current_token.type!=PRINT)
 			break;
-		//printf("1 Hi statement_list: %d %d\n",pos,current_token.type);
-		/*while(temp->child!=NULL)
-			temp=temp->child;*/
-		temp->child=set_comp((Compound*)malloc(sizeof(Compound)),NULL,statement(str,NULL,current_token));//pos--;
+		temp->child=set_comp((Compound*)malloc(sizeof(Compound)),NULL,statement(str,NULL,current_token));
 		temp=temp->child;
-		//printf(" Hi statement_list: %d\n",pos);
-		//printf("rev_pos=%d\n",rev_pos);
 		current_token=scanner(str,str[pos]);
 	}
-	//printf("rev_pos %d\n", rev_pos);
 	pos=rev_pos;
-	//match(current_token.type,SEMI);
 	return root;
 }
 Compound* program(char *str,Compound *root,Token current_token){
 	match(current_token.type,START);
 	current_token=scanner(str,str[pos]);pos++;
 	root=compound(str,NULL,current_token);
-	//printf("%d\n",pos);
-	current_token=scanner(str,str[pos]);//pos++;
-	//printf("%d\n",pos);
-	match(current_token.type,END);//printf("1 pos=%d\n",pos );
-	//current_token=scanner(str,str[pos]);printf("2 pos=%d\n",pos );
-	//match(current_token.type,SEMI);printf("3 pos=%d\n",pos );
+	current_token=scanner(str,str[pos]);
+	match(current_token.type,END);
 	return root;
 }
 void printInorder(Node* node) 
